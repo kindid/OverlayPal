@@ -31,6 +31,8 @@
 
 #include "OverlayPalGuiBackend.h"
 
+#include <QDebug>
+
 //---------------------------------------------------------------------------------------------------------------------
 
 Image2D OverlayPalGuiBackend::qImageToImage2D(const QImage& qImage)
@@ -94,7 +96,9 @@ OverlayPalGuiBackend::OverlayPalGuiBackend(QObject *parent):
     std::string executablePath = QCoreApplication::applicationDirPath().toStdString();
     mOverlayOptimiser.setExecutablePath(executablePath);
     mOverlayOptimiser.setWorkPath(executablePath + "/" + "CmplWorkPath");
-    loadHardwarePalettes(QString(executablePath.c_str()) + QString("/nespalettes"));
+    loadHardwarePalettes("/Users/kuiash/github/OverlayPal/nespalettes");
+//    loadHardwarePalettes(QString(executablePath.c_str()) + QString("/nespalettes"));
+    qDebug() << "executable path is " << QString::fromStdString(executablePath);
     // Prevent QML engine from taking ownership of and destroying models
     QQmlEngine::setObjectOwnership(&mPaletteModel, QQmlEngine::CppOwnership);
     QQmlEngine::setObjectOwnership(&mHardwarePaletteNamesModel, QQmlEngine::CppOwnership);
@@ -154,6 +158,7 @@ void OverlayPalGuiBackend::loadHardwarePalette(const QFileInfo& fileInfo)
 
 void OverlayPalGuiBackend::loadHardwarePalettes(const QString& palettesPath)
 {
+    qDebug() << "loading from " << palettesPath;
     QDir palDir(palettesPath);
     QFileInfoList palFileInfos = palDir.entryInfoList();
     for(auto& palFileInfo : palFileInfos)
@@ -165,6 +170,7 @@ void OverlayPalGuiBackend::loadHardwarePalettes(const QString& palettesPath)
     }
     mHardwarePaletteNamesModel.setStringList(mHardwarePaletteNames);
     // Use first loaded palette
+    // todo; if there are no palettes (trust me, it happened) then this is not gonna work
     mHardwarePaletteName = mHardwarePalettes.firstKey();
 }
 

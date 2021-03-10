@@ -21,6 +21,8 @@
 #define OVERLAY_OPTIMISER_H
 
 #include <functional>
+#include <string>
+#include <vector>
 #include <unordered_map>
 
 #include "ImageUtils.h"
